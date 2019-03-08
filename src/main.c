@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX 100
+#define MAX 1000
+#define INICIO 0
+#define INTEIRO 1
+#define PONTO 2
+#define FLOAT 3
 
 void limpabuffer(char buffer[MAX]) {
 	int i = 0;
@@ -13,8 +17,51 @@ void limpabuffer(char buffer[MAX]) {
 	}
 }
 
+int edigito(char c)
+{
+  if ((c >= '0') && (c <= '9')) {
+  	return 1;
+  }
+  else return 0;
+}
+
 int efloat (char numero[MAX]) {
-	return 1;
+	int maquina = INICIO;
+	int caractere = 0;
+	int i = 0;
+	for (i = 0; numero[i] != '\0' && caractere == 0; i++) {
+		switch (maquina) {
+			case INICIO:
+				if (edigito(numero[i])) {
+					maquina = INTEIRO;
+				}
+				else caractere = 1;
+				break;
+			case INTEIRO:
+				if (numero[i] == '.') {
+					maquina = PONTO;
+				}
+				else if (!edigito(numero[i])) {
+					caractere = 1;
+				}
+				break;
+			case PONTO:
+				if (edigito(numero[i])) {
+					maquina = FLOAT;
+				}
+				else caractere = 1;
+				break;
+			case FLOAT:
+				if (!edigito(numero[i])) {
+					caractere = 1;
+				}
+				break;
+		}
+	}
+	if (caractere == 1 || maquina == PONTO) {
+		return 0;
+	}
+	else return 1;
 }
 
 int main() {
@@ -29,16 +76,12 @@ int main() {
 		i++;
 	}
 	while (c != '\n');
-	
-	//printf("%s\n", buffer);
-	
+		
 	char numero[MAX];
 	limpabuffer(numero);
 	int j = 0;
 	i = 0;
 	float soma = 0;
-	
-	printf("blabla");
 	
 	while (buffer[i] != '\n') {
 		do {
@@ -46,17 +89,15 @@ int main() {
 			i++;
 			j++;	
 		}
-		while (buffer[i] != ' ' || buffer[i] != '\n');
-		//if (efloat(numero)) {
-			//soma = soma + atof(numero);
-		//} 
-		printf("%s", numero);
+		while (buffer[i] != ' ' && buffer[i] != '\n');
+		if (efloat(numero)) {
+			soma = soma + atof(numero);
+		} 
 		limpabuffer(numero);
 		j = 0;
 	}
 	
-	printf("Resultado= %f\n", soma);
-	
+	printf("%g\n", soma);
 	
 	return 0;
 }
