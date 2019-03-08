@@ -10,6 +10,8 @@
 #define PONTO 2
 #define FLOAT 3
 
+const int DEBUGMODE = 0;
+
 void limpabuffer(char buffer[MAX]) {
 	int i = 0;
 	for (i = 0; i < MAX; i++) {
@@ -83,18 +85,28 @@ int main() {
 	i = 0;
 	float soma = 0;
 	
-	while (buffer[i] != '\n') {
+	while (buffer[i] != '\0' && buffer[i] != '\n') {
 		do {
 			numero[j] = buffer[i];
 			i++;
 			j++;	
 		}
 		while (buffer[i] != ' ' && buffer[i] != '\n');
+		if( DEBUGMODE >= 5) {
+			printf ("%s\n", numero);
+			}
 		if (efloat(numero)) {
 			soma = soma + atof(numero);
+			if( DEBUGMODE >= 5) {
+			printf("sou um numero\n");
+			}
 		} 
 		limpabuffer(numero);
 		j = 0;
+		i = i + 1;
+		if( DEBUGMODE >= 5) {
+			printf("Estou aqui\n");
+		}
 	}
 	
 	printf("%g\n", soma);
